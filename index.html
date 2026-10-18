@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>Forced Oscillation · MUHH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+    :root{--bg:#050807;--g:#35F59A;--c:#31DDF5;--y:#FFD166;--t:#F3F8F5;--m:#8FA49B;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+    html{scroll-padding-top:env(safe-area-inset-top,0px)}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--t);font:400 24px/1.45 Inter,'Segoe UI',system-ui,sans-serif;overflow:hidden}
+    #wrap{position:relative;width:100%;height:100%;overflow:hidden}
+    #stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--bg);overflow:hidden}
+    .s{position:absolute;inset:0;opacity:0;visibility:hidden;transform:scale(.94);filter:blur(10px);transition:opacity .7s,transform .7s,filter .7s,clip-path .9s,visibility 0s .7s}
+    .s.on{opacity:1;visibility:visible;transform:none;filter:none;transition:opacity .7s,transform .7s,filter .7s,clip-path .9s}
+    .s.fw{transform:scale(1.1)}
+    canvas{position:absolute;left:0;top:0}
+    .p{position:absolute}.c{left:0;width:1920px;text-align:center}
+    .lab{font:600 15px/1 Orbitron,monospace;letter-spacing:.22em;color:var(--m);text-transform:uppercase}
+    .h{font:700 64px/1.05 'Space Grotesk',Inter,sans-serif;margin:0}
+    .t1{font-size:190px;line-height:1}
+    .g{color:var(--g)}.y{color:var(--y)}.cy{color:var(--c)}
+    .glass{position:absolute;box-sizing:border-box;background:rgba(9,20,16,.8);border:1px solid rgba(53,245,154,.35);border-radius:14px;box-shadow:inset 0 0 30px rgba(53,245,154,.05)}
+    .r{opacity:0}
+    .s.play .r{animation:rise .8s var(--d,0s) both cubic-bezier(.2,.7,.2,1)}
+    .s.play .k{animation:rise .7s var(--d) both,foc 1.9s var(--f)}
+    .s.play .ex{animation:rise .8s var(--d) both,shk 1.4s calc(var(--d) + .8s)}
+    @keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+    @keyframes foc{0%,100%{scale:1}15%,85%{scale:1.04;border-color:var(--g);box-shadow:0 0 50px rgba(53,245,154,.35)}}
+    @keyframes shk{0%,100%{translate:0}20%{translate:-6px 0}40%{translate:6px 0}60%{translate:-4px 0}80%{translate:4px 0}}
+    .k:hover{scale:1.04;border-color:var(--g)}
+    .sb{top:250px;left:-300px;width:200px;height:520px;background:linear-gradient(90deg,transparent,rgba(255,209,102,.35),transparent);transform:skewX(-20deg);opacity:0}
+    .s.play .sb{animation:sbm 1.8s 7.4s both}
+    @keyframes sbm{0%{left:-300px;opacity:1}100%{left:2000px;opacity:1}}
+    .ln{top:560px;left:-400px;width:400px;height:3px;background:linear-gradient(90deg,transparent,var(--c),transparent);box-shadow:0 0 20px var(--c)}
+    .s.play .ln{animation:lnm 1.8s 1.8s both}
+    @keyframes lnm{to{left:1920px}}
+    .btn{position:absolute;width:170px;height:54px;background:rgba(53,245,154,.1);border:1px solid var(--g);color:var(--g);font:600 16px Orbitron,monospace;letter-spacing:.12em;border-radius:10px;cursor:pointer}.btn:hover{background:rgba(53,245,154,.28)}
+    input[type=range]{position:absolute;accent-color:var(--y);cursor:pointer;height:28px;margin:0}
+    .big{font:700 44px/1 'Space Grotesk',sans-serif}
+    .k8{position:absolute;left:-95px;top:-130px;width:190px;height:260px;box-sizing:border-box;padding:18px 12px;text-align:center;background:rgba(9,20,16,.94);border:1px solid rgba(53,245,154,.5);border-radius:14px;box-shadow:0 0 30px rgba(49,221,245,.15)}
+    #ps{position:absolute;left:0;top:130px;width:1920px;height:700px;perspective:1700px;perspective-origin:50% 40%}
+    #tl,#ring{position:absolute;transform-style:preserve-3d}#tl{inset:0}#ring{left:50%;top:50%;width:0;height:0}
+    #halo{left:660px;top:180px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,209,102,.5),rgba(53,245,154,.25) 40%,transparent 68%);opacity:0}
+    .s.play #veil{animation:vl 4s 24s forwards}@keyframes vl{to{opacity:.88}}
+    #hud{position:absolute;right:40px;top:14px;z-index:5}
+    .ph{width:166px;height:170px;border-radius:10px;overflow:hidden;background:#0c1f18;border:1px solid rgba(49,221,245,.4);display:flex;align-items:center;justify-content:center;font-size:72px}
+    .ph img{width:100%;height:100%;object-fit:cover;display:block}
+    .nm{font:600 18px/1.2 'Space Grotesk',Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #nav{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:8px;align-items:center;z-index:9;opacity:.35;transition:opacity .3s}#nav:hover{opacity:1}
+    #nav button{background:rgba(9,20,16,.85);color:var(--g);border:1px solid rgba(53,245,154,.5);border-radius:8px;width:44px;height:36px;font-size:18px;cursor:pointer}
+    #pg{font:600 13px Orbitron,monospace;color:var(--m);min-width:64px;text-align:center}
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="stage">
+      
+      <section class="s" id="s0">
+        <canvas id="c0" width="1920" height="1080">
+        </canvas>
+        <div class="p lab r" style="left:60px;top:48px;line-height:2;--d:2s">TEAM 2<br>ft. MUHH</div>
+        <div class="p c" style="top:285px">
+          <div class="lab r cy" style="--d:5s;margin-bottom:22px">PHYSICS TOPIC</div>
+          <h1 class="h t1 g r" style="--d:5.4s;text-shadow:0 0 50px rgba(53,245,154,.5)">FORCED</h1>
+          <h1 class="h t1 r" style="--d:6.4s">OSCILLATION</h1>
+        </div>
+        <div class="p sb">
+        </div>
+        <div class="p c lab r" style="top:930px;--d:7.6s;color:var(--t)">TEAM 2 of 11i2</div>
+        <div class="p c lab r" style="top:1010px;--d:8s">MADE BY MUHH</div>
+      </section>
+      
+      <section class="s" id="s1">
+        <canvas id="c1" width="1920" height="1080">
+        </canvas>
+        <div class="p lab" style="left:60px;top:48px">SWING OBSERVATION</div>
+        <div class="glass" style="left:60px;top:930px;padding:14px 22px">
+          <div class="lab">EXTERNAL FORCE</div>
+          <div class="y" style="font:600 32px 'Space Grotesk'">F(t)</div>
+        </div>
+        <div class="glass" style="right:60px;top:930px;padding:14px 22px;text-align:right">
+          <div class="lab">MOTION</div>
+          <div class="cy" style="font:600 32px 'Space Grotesk'">LEFT ↔ RIGHT</div>
+        </div>
+        <div class="p c y r" style="top:965px;font:600 30px 'Space Grotesk';--d:1.5s;letter-spacing:.05em">ONE REPEATED PUSH — ONE SUSTAINED MOTION</div>
+      </section>
+      
+      <section class="s" id="s2">
+        <div class="p c" style="top:380px">
+          <div class="lab r cy" style="--d:.4s;margin-bottom:26px">THE PHYSICS QUESTION</div>
+          <h1 class="h r" style="--d:.9s;font-size:120px">WHAT IS<br>
+          <span class="g">FORCED</span> OSCILLATION?</h1>
+        </div>
+        <div class="p ln">
+        </div>
+      </section>
+      
+      <section class="s" id="s3">
+        <div class="p lab r" style="left:110px;top:80px;--d:.4s">MUHH</div>
+        <h2 class="h p r" style="left:110px;top:115px;--d:.7s">FORCED OSCILLATION</h2>
+        <p class="p r" style="left:110px;top:215px;width:980px;margin:0;font-size:34px;line-height:1.5;--d:1.3s">Oscillation of a system under the action of an <b class="g">external force</b> that varies <b class="g">periodically</b> with time.</p>
+        <div class="glass r" style="left:110px;top:400px;width:480px;height:220px;padding:24px;--d:3s">
+          <div class="y" style="font-size:40px">⚡</div>
+          <h3 class="h" style="font-size:28px;margin:6px 0">External force adds energy</h3>
+          <div style="color:var(--m);font-size:21px">Compensates the energy lost to friction and drag.</div>
+        </div>
+        <div class="glass r" style="left:620px;top:400px;width:480px;height:220px;padding:24px;--d:3.6s">
+          <div class="g" style="font-size:40px">∿</div>
+          <h3 class="h" style="font-size:28px;margin:6px 0">Steady-state frequency</h3>
+          <div style="color:var(--m);font-size:21px">Equals the frequency of the external force.</div>
+        </div>
+        <div class="glass r" style="left:110px;top:650px;width:990px;height:170px;padding:22px 30px;--d:4.4s">
+          <div class="lab">Equation of the Driving Force</div>
+          <div class="h y" style="font-size:46px;margin:12px 0 8px">Fcb = F₀ x cos(ωt + φ)</div>
+          <div style="font-size:19px;color:var(--m)">Fcb: driving force · F₀: force amplitude · ω: angular frequency · φ: initial phase</div>
+        </div>
+        <div class="p r" style="left:1180px;top:100px;width:680px;height:260px;--d:1.2s">
+          <canvas id="c3" width="680" height="260">
+          </canvas>
+        </div>
+        <div class="glass ex" style="left:1180px;top:420px;width:210px;height:340px;padding:18px;--d:5s">
+          <div style="font-size:58px">🧺</div>
+          <h3 class="h" style="font-size:24px">Washing machine</h3>
+          <div style="font-size:18px;color:var(--m)">A rotating part creates a periodic force that shakes the drum.</div>
+        </div>
+        <div class="glass ex" style="left:1415px;top:420px;width:210px;height:340px;padding:18px;--d:6s">
+          <div style="font-size:58px">🚙</div>
+          <h3 class="h" style="font-size:24px">Car suspension</h3>
+          <div style="font-size:18px;color:var(--m)">The road surface acts as a defined source of excitation.</div>
+        </div>
+        <div class="glass ex" style="left:1650px;top:420px;width:210px;height:340px;padding:18px;--d:7s">
+          <div style="font-size:58px">🔊</div>
+          <h3 class="h" style="font-size:24px">Speaker cone</h3>
+          <div style="font-size:18px;color:var(--m)">An electrical signal creates a varying force on the cone.</div>
+        </div>
+      </section>
+      
+      <section class="s" id="s4">
+        <div class="p" style="left:40px;top:20px">
+          <div class="lab">MUHH</div>
+          <h2 class="h" style="font-size:46px;margin-top:10px">FORCED OSCILLATION</h2>
+        </div>
+        <div class="p lab g" style="right:60px;top:52px;font-size:16px">● LIVE MODEL</div>
+        <div class="glass" style="left:40px;top:120px;width:880px;height:520px">
+          <div class="lab p" style="left:24px;top:18px">01 / OSCILLATOR · <span class="g">MASS–SPRING UNDER PERIODIC FORCE</span>
+          </div>
+          <canvas id="c4a" width="880" height="440" style="top:64px">
+          </canvas>
+        </div>
+        <div class="glass" style="left:960px;top:120px;width:920px;height:520px">
+          <div class="lab p" style="left:24px;top:18px">02 / RESPONSE GRAPH · DISPLACEMENT <span style="text-transform:none">x(t)</span>
+          </div>
+          <canvas id="c4b" width="920" height="440" style="top:64px">
+          </canvas>
+        </div>
+        <div class="glass" style="left:40px;top:660px;width:1840px;height:340px">
+          <div class="lab p" style="left:40px;top:28px">FORCING FREQUENCY</div>
+          <div class="big y p" id="rv" style="left:40px;top:58px;font-size:96px">1.0×</div>
+          <input id="rs" type="range" min="0.5" max="5" step="0.1" value="1" style="left:40px;top:190px;width:640px">
+          <div class="lab p" style="left:40px;top:228px">0.5×</div>
+          <div class="lab p" style="left:630px;top:228px">5.0×</div>
+          <div class="p" style="left:40px;top:268px;font-size:24px;color:var(--m)">f<sub>cb</sub> = r·f₀ = <b class="y" id="fc">1.0</b> Hz</div>
+          <div class="lab p" style="left:760px;top:28px">DAMPING c</div>
+          <div class="big cy p" id="cv" style="left:960px;top:20px;font-size:36px">1.0</div>
+          <input id="cs" type="range" min="0.4" max="4" step="0.1" value="1" style="left:760px;top:84px;width:400px">
+          <div class="lab p" style="left:760px;top:160px">SPEED</div>
+          <div class="big cy p" id="sv" style="left:960px;top:152px;font-size:36px">1.00×</div>
+          <input id="ss" type="range" min="0.25" max="2" step="0.25" value="1" style="left:760px;top:216px;width:400px">
+          <button class="btn" id="bp" style="left:1240px;top:28px">PAUSE</button>
+          <button class="btn" id="br" style="left:1424px;top:28px">RESET</button>
+          <button class="btn" id="bf" style="left:1608px;top:28px">FORCE ON</button>
+          <div class="lab p" style="left:1240px;top:128px">TIME</div>
+          <div class="big g p" id="tv" style="left:1240px;top:156px">0.00 s</div>
+          <div class="lab p" style="left:1240px;top:228px">AMPLITUDE · LAST 5 s</div>
+          <div class="big y p" id="av" style="left:1240px;top:256px">0.000</div>
+        </div>
+        <div class="p lab" style="left:40px;top:1030px">STATUS <span id="st" class="g">RUNNING</span>
+        </div>
+        <div class="p lab" style="right:60px;top:1030px">f₀ = 1.00 Hz · m = 1 · k = 39.5 · F₀ = 2.4 · amplitude comes from the equation</div>
+      </section>
+      
+      <section class="s" id="s5">
+        <div class="p lab r y" style="left:110px;top:90px;--d:.3s">MUHH</div>
+        <h2 class="h p r" style="left:110px;top:122px;--d:.5s">THE ROLE OF THE EXTERNAL FORCE</h2>
+      </section>
+      <section class="s" id="s6">
+        <div class="p lab r y" style="left:110px;top:60px;--d:.3s">MUHH</div>
+        <h2 class="h p r" style="left:110px;top:90px;font-size:56px;--d:.5s">APPLICATIONS</h2>
+      </section>
+      
+      <section class="s" id="s7">
+        <div class="p" id="halo">
+        </div>
+        <div id="ps">
+          <div id="tl">
+            <div id="ring">
+            </div>
+          </div>
+        </div>
+        <div class="p c lab r" style="top:360px;--d:13s;color:var(--c)">PHYSICS · GRADE 11</div>
+        <h1 class="h t1 p c r" style="top:390px;font-size:170px;--d:13.5s;text-shadow:0 0 60px rgba(255,209,102,.5)">THANK YOU</h1>
+        <div class="p c r" style="top:590px;font:600 34px 'Space Grotesk';--d:16.5s">THANK YOU, TEACHERS AND CLASSMATES, FOR LISTENING</div>
+        <div class="p c lab r y" style="top:960px;--d:22s">MADE BY MUHH</div>
+        <div class="p lab" id="hint" style="left:60px;top:48px;color:var(--y)">MY TEAM 2</div>
+        <div class="p" id="veil" style="inset:0;background:#000;opacity:0;pointer-events:none">
+        </div>
+      </section>
+      
+      <div id="hud" class="lab">
+      </div>
+    </div>
+    <div id="nav">
+      <button id="pv">‹</button>
+      <span id="pg">
+      </span>
+      <button id="nx">›</button>
+      <button id="fs">⛶</button>
+    </div>
+  </div>
+  
+  <script>
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],cv=id=>{const c=document.getElementById(id);return[c,c.getContext('2d')]};
+  const wrap=$('#wrap'),stage=$('#stage'),DRAW={},ENTER={},clock=[];let idx=-1,lock=false;
+  function fit(){const k=Math.min(wrap.clientWidth/1920,wrap.clientHeight/1080);stage.style.transform=`translate(${(wrap.clientWidth-1920*k)/2}px,${(wrap.clientHeight-1080*k)/2}px) scale(${k})`}
+  addEventListener('resize',fit);fit();
+  /* ===== Dựng slide 6, 7, 8 ===== */
+  $('#s5').insertAdjacentHTML('beforeend',[['Supplies energy','Replaces the energy lost to friction and drag.'],['Sustains the oscillation','The system keeps oscillating as long as the force acts.'],['Sets the frequency','In the steady state, the system oscillates at the frequency of the external force.'],['Tunes the response','Changing the driving force controls how the system responds.']].map((a,i)=>`<div class="glass r" style="left:${110+i%2*880}px;top:${250+(i>>1)*370}px;width:820px;height:340px;--d:${2+i*3}s">
+  <div class="lab p y" style="left:28px;top:30px">0${i+1}</div>
+  <h3 class="h p" style="left:28px;top:70px;font-size:36px;width:390px">${a[0]}</h3>
+  <p class="p" style="left:28px;top:170px;width:390px;margin:0;color:var(--m)">${a[1]}</p>
+  <canvas id="m${i}" width="360" height="220" style="left:440px;top:60px">
+  </canvas>
+</div>`).join(''));
+$('#s6').insertAdjacentHTML('beforeend',[['🧺','Washing machine','A periodic excitation force from moving parts causes vibration.'],['🚙','Car suspension','The system responds to excitation coming from the road surface.'],['🔊','Speaker cone','A varying electromagnetic force makes the cone oscillate.'],['🏭','Industrial machine','An unbalanced rotating part can create a periodic force.'],['🛝','Swing','Repeated pushes can sustain the motion.'],['Ψ','Tuning fork','Periodic external excitation; count it only when the mechanism is stated.']].map((a,i)=>`<div class="glass k r" style="left:${110+i%3*580}px;top:${200+(i>2)*410}px;width:540px;height:380px;--d:${i<3?2+i*.8:5+(i-3)*.8}s;--f:${8+i*2}s">
+<div class="lab p" style="left:28px;top:26px">0${i+1}</div>
+<div class="p c g" style="left:0;width:540px;top:50px;font-size:96px;line-height:1.2;text-shadow:0 0 40px rgba(53,245,154,.5)">${a[0]}</div>
+<h3 class="h p c" style="left:0;width:540px;top:200px;font-size:38px">${a[1]}</h3>
+<p class="p c" style="left:34px;width:472px;top:262px;margin:0;font-size:22px;color:var(--m)">${a[2]}</p>
+</div>`).join(''));
+
+  const TEAM = [
+    { n: 'ĐỖ VĂN MINH ĐỨC', i: 'https://example.com/member01.jpg' },
+    { n: 'MAI ĐỨC HUY', i: 'https://example.com/member02.jpg' },
+    { n: 'TRẦN NGUYỄN VÂN ANH', i: 'https://example.com/member03.jpg' },
+    { n: 'ĐẶNG LINH ĐAN', i: 'https://example.com/member04.jpg' },
+    { n: 'TRẦN THÁI HUY', i: 'https://example.com/member05.jpg' },
+    { n: 'TRẦN THÁI HUY', i: 'https://example.com/member06.jpg' },
+    { n: 'NGUYỄN MINH KHANG', i: 'https://example.com/member07.jpg' },
+    { n: 'HOÀNG HỒNG HẢI', i: 'https://example.com/member08.jpg' },
+    { n: 'PHAN TRÚC HIỀN', i: 'https://example.com/member09.jpg' },
+    { n: 'NGUYỄN DUY KHÁNH', i: 'https://example.com/member10.jpg' },
+    { n: 'NGUYỄN HỮU HUY', i: 'https://example.com/member11.jpg' },
+    { n: 'NGUYỄN ĐỨC HUY', i: 'https://example.com/member12.jpg' },
+    { n: 'ĐỖ QUỲNH CHI', i: 'https://example.com/member13.jpg' },
+    { n: 'ĐÀO QUỲNH AN', i: 'https://example.com/member14.jpg' }
+  ];
+
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'
+  }[c]));
+
+  let K8 = [];
+
+  function renderRing() {
+    $('#ring').innerHTML = TEAM.map((m, j) => `
+      <div class="k8" style="transform:rotateY(${j * 360 / TEAM.length}deg) translateZ(470px)">
+        <div class="ph">
+          ${m.i
+            ? `<img src="${esc(m.i)}" alt="${esc(m.n)}" onerror="this.style.display='none';this.parentElement.textContent='👤'">`
+            : '👤'}
+        </div>
+        <div class="lab y" style="margin:10px 0 6px">${String(j + 1).padStart(2, '0')}</div>
+        <div class="nm">${esc(m.n)}</div>
+      </div>
+    `).join('');
+    K8 = $$('.k8');
+  }
+
+  renderRing();
+  const S=$$('.s'),N=S.length;
+/* ===== Slide 1 ===== */
+const[c0,x0]=cv('c0'),P=[...Array(70)].map(()=>({x:Math.random()*1920,y:Math.random()*1080,v:10+Math.random()*25,r:1+Math.random()*2,p:Math.random()*6}));
+DRAW[0]=(t,dt)=>{const g=x0,e=Math.min(1,Math.max(0,(t-1.5)/1.5));g.clearRect(0,0,1920,1080);g.strokeStyle='rgba(49,221,245,.12)';g.lineWidth=1;
+for(let i=1;i<=8;i++){g.beginPath();g.arc(960,540,i*130*e,0,7);g.stroke()}
+for(let i=0;i<24;i++){const a=i*Math.PI/12;g.beginPath();g.moveTo(960,540);g.lineTo(960+Math.cos(a)*1040*e,540+Math.sin(a)*1040*e);g.stroke()}
+g.globalAlpha=Math.min(1,Math.max(0,(t-2)/2));P.forEach(p=>{p.y-=p.v*dt;if(p.y<0)p.y=1080;g.fillStyle=`rgba(53,245,154,${.2+.4*Math.sin(t+p.p)**2})`;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill()});g.globalAlpha=1;
+const w=Math.min(1,Math.max(0,(t-3)/2))*1920;g.strokeStyle='rgba(53,245,154,.6)';g.lineWidth=3;g.shadowColor='#35F59A';g.shadowBlur=18;g.beginPath();
+for(let x=0;x<=w;x+=8){const y=540+110*Math.sin(x*.006-t*1.1)*Math.sin(x*.0016+.6);x?g.lineTo(x,y):g.moveTo(x,y)}g.stroke();
+g.fillStyle='#31DDF5';g.shadowColor='#31DDF5';g.beginPath();g.arc(960,540,6*(1-e*.6),0,7);g.fill();g.shadowBlur=0;
+if(t>7){g.globalAlpha=Math.min(1,(t-7)/2);const th=.45*Math.sin((t-7)*1.2),px=1600,py=100,bx=px+300*Math.sin(th),by=py+300*Math.cos(th);g.strokeStyle='#8FA49B';g.lineWidth=2;g.beginPath();g.moveTo(px,py);g.lineTo(bx,by);g.stroke();g.fillStyle='#FFD166';g.shadowColor='#FFD166';g.shadowBlur=30;g.beginPath();g.arc(bx,by,22,0,7);g.fill();g.shadowBlur=0;g.globalAlpha=1}};
+/* ===== Slide 2: xích đu (xích đu bị đẩy đúng pha) ===== */
+const[c1,x1]=cv('c1'),W={th:.28,w:0,p:0,cd:0,t:0,tr:[],px:700};
+function sw(h){W.t+=h;W.cd-=h;if(W.t>5&&W.th<-.18&&W.w>0&&W.cd<=0){W.p=.25;W.cd=3}let a=-2.2*Math.sin(W.th)-.12*W.w;if(W.p>0){a+=.7;W.p-=h}W.w+=a*h;W.th+=W.w*h}
+DRAW[1]=(t,dt)=>{for(let i=0;i<4;i++)sw(dt/4);const g=x1,th=W.th,L=520,px=960,py=170,sx=px+L*Math.sin(th),sy=py+L*Math.cos(th),A=Math.min(.8,Math.hypot(th,W.w/1.483));
+W.px+=(960-L*Math.sin(A)-110-W.px)*.03;g.clearRect(0,0,1920,1080);
+const gr=g.createLinearGradient(0,760,0,1080);gr.addColorStop(0,'#0c1f18');gr.addColorStop(1,'#050807');g.fillStyle=gr;g.fillRect(0,760,1920,320);g.strokeStyle='rgba(53,245,154,.13)';g.lineWidth=1;
+for(let i=-14;i<=14;i++){g.beginPath();g.moveTo(960+i*45,760);g.lineTo(960+i*200,1080);g.stroke()}
+for(let j=1;j<6;j++){const y=760+(j/5)**2*320;g.beginPath();g.moveTo(0,y);g.lineTo(1920,y);g.stroke()}
+const fr=(o,q,a)=>{g.strokeStyle=`rgba(143,164,155,${a})`;g.lineWidth=14;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(800+o,780+q);g.lineTo(960+o,170+q);g.lineTo(1120+o,780+q);g.moveTo(847+o,600+q);g.lineTo(1073+o,600+q);g.stroke()};
+fr(-30,-8,.3);g.strokeStyle='#8FA49B';g.lineWidth=18;g.beginPath();g.moveTo(930,162);g.lineTo(990,178);g.stroke();
+W.tr.push([sx,sy]);if(W.tr.length>140)W.tr.shift();g.lineWidth=3;W.tr.forEach((p,i)=>{if(i){g.strokeStyle=`rgba(49,221,245,${i/W.tr.length*.55})`;g.beginPath();g.moveTo(W.tr[i-1][0],W.tr[i-1][1]+60);g.lineTo(p[0],p[1]+60);g.stroke()}});
+g.strokeStyle='#9fb7ad';g.lineWidth=3;[-1,1].forEach(s=>{g.beginPath();g.moveTo(px+14*s,py+4*s);g.lineTo(sx+14*s,sy+4*s);g.stroke()});
+g.save();g.translate(sx,sy);g.rotate(-th);g.fillStyle='#16372d';g.strokeStyle='#35F59A';g.lineWidth=2;g.shadowColor='#35F59A';g.shadowBlur=18;g.fillRect(-52,0,104,14);g.strokeRect(-52,0,104,14);g.shadowBlur=0;
+g.strokeStyle='#31DDF5';g.lineWidth=22;g.beginPath();g.moveTo(0,-8);g.lineTo(0,-92);g.stroke();g.lineWidth=14;g.beginPath();g.moveTo(0,-8);g.lineTo(46,-4);g.lineTo(52,44);g.moveTo(0,-80);g.lineTo(30,-44);g.stroke();g.fillStyle='#31DDF5';g.beginPath();g.arc(0,-126,21,0,7);g.fill();g.restore();
+const u=W.px,pu=W.p>0,hx=pu?sx-58:u+40,hy=pu?sy-40:700;g.strokeStyle='#8FA49B';g.lineWidth=16;g.beginPath();g.moveTo(u,640);g.lineTo(u,730);g.lineTo(u-15,800);g.moveTo(u,730);g.lineTo(u+18,800);g.moveTo(u,660);g.lineTo(hx,hy);g.stroke();g.fillStyle='#8FA49B';g.beginPath();g.arc(u,612,21,0,7);g.fill();
+if(pu){g.globalAlpha=Math.min(1,W.p/.1);g.strokeStyle=g.fillStyle='#FFD166';g.lineWidth=8;g.beginPath();g.moveTo(hx-120,hy);g.lineTo(hx-20,hy);g.stroke();g.beginPath();g.moveTo(hx-4,hy);g.lineTo(hx-26,hy-14);g.lineTo(hx-26,hy+14);g.fill();g.font='700 28px Orbitron,monospace';g.fillText('F',hx-160,hy+10);g.globalAlpha=1}
+fr(30,8,.4)};
+/* ===== Slide 4: sóng + vector lực ===== */
+const[c3,x3]=cv('c3');DRAW[3]=t=>{const g=x3;g.clearRect(0,0,680,260);g.strokeStyle='rgba(143,164,155,.3)';g.lineWidth=1;g.beginPath();g.moveTo(0,130);g.lineTo(680,130);g.stroke();
+g.strokeStyle='#35F59A';g.lineWidth=3;g.shadowColor='#35F59A';g.shadowBlur=14;g.beginPath();for(let x=220;x<=680;x+=5){const y=130-70*Math.sin((x-220)*.025-t*3);x==220?g.moveTo(x,y):g.lineTo(x,y)}g.stroke();g.shadowBlur=0;
+const f=Math.cos(t*3),bx=110+f*30,L=f*80,d=L<0?-1:1;g.fillStyle='#0f2f25';g.strokeStyle='#31DDF5';g.fillRect(bx-34,96,68,68);g.strokeRect(bx-34,96,68,68);
+g.strokeStyle=g.fillStyle='#FFD166';g.lineWidth=5;g.beginPath();g.moveTo(bx,130);g.lineTo(bx+L,130);g.stroke();g.beginPath();g.moveTo(bx+L,130);g.lineTo(bx+L-d*16,120);g.lineTo(bx+L-d*16,140);g.fill();g.font='600 14px Orbitron,monospace';g.fillText('PERIODIC F(t)',30,215)};
+/* ===== Slide 5: phòng thí nghiệm (m=1, f₀=1 Hz, RK4, dt cố định 1/120 s) ===== */
+const[ca,xa]=cv('c4a'),[cb,xb]=cv('c4b'),F0=2.4,K=(2*Math.PI)**2,DT=1/120,R={r:1,c:1,F:1,sp:1,run:1};
+function rst(){Object.assign(R,{x:.1,v:0,t:0,ph:0,ac:0,H:[[0,.1,R.F]]})}rst();
+const fa=(x,v,p)=>R.F*F0*Math.cos(p)-R.c*v-K*x;
+function step(){const h=DT,w=2*Math.PI*R.r,p=R.ph,x=R.x,v=R.v,a1=fa(x,v,p),x2=v+a1*h/2,a2=fa(x+v*h/2,v+a1*h/2,p+w*h/2),x3=v+a2*h/2,a3=fa(x+x2*h/2,v+a2*h/2,p+w*h/2),x4=v+a3*h,a4=fa(x+x3*h,v+a3*h,p+w*h);
+R.x+=h/6*(v+2*x2+2*x3+x4);R.v+=h/6*(a1+2*a2+2*a3+a4);R.ph+=w*h;R.t+=h;R.H.push([R.t,R.x,R.F*Math.cos(R.ph)]);if(R.H[0][0]<R.t-12)R.H.shift()}
+function dModel(){const g=xa,mx=470+Math.max(-1.1,Math.min(1.1,R.x))*250,fv=R.F*Math.cos(R.ph);g.clearRect(0,0,880,440);
+g.strokeStyle='rgba(143,164,155,.45)';g.lineWidth=2;g.beginPath();g.moveTo(30,330);g.lineTo(850,330);g.stroke();g.fillStyle='#16251f';g.fillRect(30,170,26,160);g.strokeStyle='#35F59A';g.strokeRect(30,170,26,160);
+g.setLineDash([6,8]);g.strokeStyle='rgba(143,164,155,.5)';g.beginPath();g.moveTo(470,160);g.lineTo(470,350);g.stroke();g.setLineDash([]);g.fillStyle='#8FA49B';g.font='600 14px Orbitron,monospace';g.fillText('x = 0',446,374);
+g.strokeStyle='#31DDF5';g.lineWidth=3;g.beginPath();g.moveTo(56,284);const a=56,b=mx-46;for(let i=1;i<=16;i++)g.lineTo(a+(b-a)*i/16,i==16?284:284+(i%2?-24:24));g.stroke();
+g.fillStyle='#0f2f25';g.shadowColor='#35F59A';g.shadowBlur=24;g.fillRect(mx-46,238,92,92);g.shadowBlur=0;g.strokeStyle='#35F59A';g.strokeRect(mx-46,238,92,92);
+const L=130*fv,d=L<0?-1:1;g.strokeStyle=g.fillStyle='#FFD166';g.lineWidth=6;g.beginPath();g.moveTo(mx,200);g.lineTo(mx+L,200);g.stroke();if(Math.abs(L)>8){g.beginPath();g.moveTo(mx+L,200);g.lineTo(mx+L-d*16,190);g.lineTo(mx+L-d*16,210);g.fill()}g.fillText('F(t)',mx-18,172)}
+function dGraph(){const g=xb,W=920,H=440,l=64,T=20,pw=W-l-24,ph=H-T-46,w=6,t1=R.t,t0=t1-w,cy=T+ph/2,X=t=>l+(t-t0)/w*pw,Y=v=>cy-v*ph/2;g.clearRect(0,0,W,H);g.font='600 13px Orbitron,monospace';g.fillStyle='#8FA49B';g.lineWidth=1;
+[-1,-.5,0,.5,1].forEach(v=>{g.strokeStyle=v?'rgba(143,164,155,.15)':'rgba(143,164,155,.55)';g.beginPath();g.moveTo(l,Y(v));g.lineTo(l+pw,Y(v));g.stroke();g.fillText(v.toFixed(1),14,Y(v)+4)});
+for(let s=Math.ceil(Math.max(0,t0));s<=t1;s++){g.strokeStyle='rgba(143,164,155,.15)';g.beginPath();g.moveTo(X(s),T);g.lineTo(X(s),T+ph);g.stroke();g.fillText(s+'s',X(s)-8,H-18)}
+g.save();g.beginPath();g.rect(l,T,pw,ph);g.clip();
+const pl=(i,col,sc,dash,lw)=>{g.strokeStyle=col;g.lineWidth=lw;g.setLineDash(dash);g.beginPath();let f=0;R.H.forEach(p=>{if(p[0]<t0)return;const x=X(p[0]),y=Y(Math.max(-1.2,Math.min(1.2,p[i]*sc)));f?g.lineTo(x,y):g.moveTo(x,y);f=1});g.stroke()};
+pl(2,'rgba(255,209,102,.8)',.3,[8,6],2);g.shadowColor='#35F59A';g.shadowBlur=10;pl(1,'#35F59A',1,[],3);g.restore();
+g.shadowBlur=0;g.fillStyle='#35F59A';g.fillText('x(t)',l+10,T+20);g.fillStyle='#FFD166';g.fillText('F(t) external force (normalized)',l+70,T+20);g.fillStyle='#8FA49B';g.fillText('t (s)',W-60,H-4)}
+DRAW[4]=(t,dt)=>{if(R.run){R.ac+=Math.min(dt,.05)*R.sp;let n=0;while(R.ac>=DT&&n++<60){step();R.ac-=DT}}dModel();dGraph();let m=0;for(let i=R.H.length-1;i>=0&&R.H[i][0]>R.t-5;i--)m=Math.max(m,Math.abs(R.H[i][1]));
+$('#tv').textContent=R.t.toFixed(2)+' s';$('#av').textContent=m.toFixed(3);$('#st').textContent=(R.run?'RUNNING':'PAUSED')+' · F(t) '+(R.F?'ON':'OFF')};
+const rs=$('#rs'),cs=$('#cs'),ss=$('#ss');
+rs.oninput=()=>{R.r=+rs.value;$('#rv').textContent=R.r.toFixed(1)+'×';$('#fc').textContent=R.r.toFixed(1)};
+cs.oninput=()=>{R.c=+cs.value;$('#cv').textContent=R.c.toFixed(1)};
+ss.oninput=()=>{R.sp=+ss.value;$('#sv').textContent=R.sp.toFixed(2)+'×'};
+$('#bp').onclick=e=>{R.run=R.run?0:1;e.target.textContent=R.run?'PAUSE':'RESUME';e.target.blur()};
+$('#br').onclick=e=>{rst();e.target.blur()};
+$('#bf').onclick=e=>{R.F=R.F?0:1;e.target.textContent='FORCE '+(R.F?'ON':'OFF');e.target.blur()};
+/* ===== Slide 6: 4 hoạt ảnh vai trò ===== */
+const mc=[0,1,2,3].map(i=>cv('m'+i)),wv=(g,y,A,k,p,c)=>{g.strokeStyle=c;g.lineWidth=3;g.beginPath();for(let x=10;x<=350;x+=4){const Y=y-A*Math.sin(x*k-p);x==10?g.moveTo(x,Y):g.lineTo(x,Y)}g.stroke()};
+DRAW[5]=t=>mc.forEach(([c,g],i)=>{g.clearRect(0,0,360,220);g.lineCap='round';g.font='600 13px Orbitron,monospace';
+if(i==0){g.fillStyle='#FFD166';g.fillRect(20,80,50,60);for(let k=0;k<8;k++){const q=(t*.5+k/8)%1;g.globalAlpha=Math.sin(q*Math.PI);g.beginPath();g.arc(80+q*190,110+Math.sin(q*10+k)*14,6,0,7);g.fill()}g.globalAlpha=1;g.shadowColor='#35F59A';g.shadowBlur=14+14*Math.sin(t*4);g.fillStyle='#35F59A';g.fillRect(290+6*Math.sin(t*5),80,56,60);g.shadowBlur=0}
+if(i==1){g.strokeStyle='#8FA49B';g.lineWidth=4;g.beginPath();g.moveTo(120,20);g.lineTo(240,20);g.stroke();const y=140+40*Math.sin(t*3.2);g.strokeStyle='#31DDF5';g.beginPath();g.moveTo(180,20);for(let k=1;k<=10;k++)g.lineTo(180+(k%2?-18:18),20+(y-70)*k/10);g.lineTo(180,y-50);g.stroke();g.fillStyle='#35F59A';g.fillRect(140,y-50,80,50)}
+if(i==2){wv(g,60,26,.045,t*3,'#FFD166');wv(g,155,36,.045,t*3+1,'#35F59A');g.fillStyle='#8FA49B';g.fillText('F(t)',12,24);g.fillText('x(t)',12,120);g.fillText('SAME FREQUENCY',196,208)}
+if(i==3){const u=.5+.5*Math.sin(t*.9);g.strokeStyle='#8FA49B';g.lineWidth=6;g.beginPath();g.moveTo(40,34);g.lineTo(320,34);g.stroke();g.fillStyle='#FFD166';g.beginPath();g.arc(40+280*u,34,14,0,7);g.fill();wv(g,135,10+55*u,.03+.04*u,t*3,'#35F59A')}});
+/* ===== Slide 8: vòng 14 thẻ 3D ===== */
+let ang=0;ENTER[7]=()=>{ang=0};
+DRAW[7]=(t,dt)=>{ang+=dt*(t<4?10:t<8?22:t<12?8:3);const q=Math.min(1,Math.max(0,(t-12)/3.5)),k=t<12?1:Math.max(.02,1-q**.7);
+$('#tl').style.transform=`rotateX(-14deg) scale(${k})`;$('#ring').style.transform=`rotateY(${ang}deg)`;$('#ps').style.opacity=Math.min(1,t/1.5);
+$('#halo').style.opacity=q*(t>22?Math.max(.2,1-(t-22)/4):1);
+K8.forEach((c,i)=>{const a=(i*360/14+ang)*Math.PI/180;c.style.opacity=.2+.8*(Math.cos(a)+1)/2})};
+/* ===== Điều hướng & chuyển cảnh ===== */
+function enter(n){const B=S[n];B.classList.remove('play');void B.offsetWidth;B.classList.add('play','on');B.classList.remove('fw');idx=n;clock[n]=performance.now();$('#hud').textContent=String(n+1).padStart(2,'0')+' / 08';$('#pg').textContent=(n+1)+' / '+N;ENTER[n]&&ENTER[n]()}
+function go(n){if(lock||n<0||n>=N)return;lock=true;const A=S[idx],B=S[n],fw=n>idx;A.classList.remove('on');if(fw)A.classList.add('fw');
+if(idx===1&&n===2){B.style.transition='none';B.style.clipPath='circle(0% at 50% 58%)';void B.offsetWidth;B.style.transition='';B.style.clipPath='circle(150% at 50% 58%)'}
+enter(n);setTimeout(()=>{lock=false;A.classList.remove('play');B.style.clipPath=''},850)}
+function nav(d){if(lock)return;if(d>0&&idx===N-1){enter(idx);return}go(idx+d)}
+addEventListener('keydown',e=>{const k=e.key,rg=e.target.type==='range';
+if(k==='>'||k==='.'||(!rg&&(k==='ArrowRight'||k==='PageDown')))nav(1);
+else if(k==='<'||k===','||(!rg&&(k==='ArrowLeft'||k==='PageUp')))nav(-1);
+else if(k==='f'||k==='F')fs()});
+const fs=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})};
+$('#pv').onclick=()=>nav(-1);$('#nx').onclick=()=>nav(1);$('#fs').onclick=fs;
+let tx=null;wrap.addEventListener('touchstart',e=>{tx=e.target.closest('input,button')?null:e.touches[0].clientX},{passive:true});
+wrap.addEventListener('touchend',e=>{if(tx!=null){const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>60)nav(d<0?1:-1)}tx=null});
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(idx>=0&&DRAW[idx])DRAW[idx]((now-clock[idx])/1000,dt);requestAnimationFrame(loop)}
+enter(0);requestAnimationFrame(loop);
+</script>
+</body>
+</html>
