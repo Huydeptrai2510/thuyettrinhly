@@ -116,17 +116,17 @@ input[type=range]{position:absolute;accent-color:var(--y);cursor:pointer;height:
 <div class="glass r" style="left:110px;top:400px;width:480px;height:270px;padding:24px;--d:1.8s">
 <div class="lab cy" style="font-size:13px">01 · AMPLITUDE</div>
 <h3 class="h" style="font-size:28px;margin:10px 0 12px">CONSTANT AMPLITUDE</h3>
-<div style="color:var(--m);font-size:21px">Sau giai đoạn quá độ, dao động cưỡng bức ổn định có <b class="g">biên độ không đổi</b> theo thời gian khi các điều kiện tác động được giữ nguyên.</div>
+<div style="color:var(--m);font-size:21px">After the transient phase, steady forced oscillation has a <b class="g">constant amplitude</b> over time when the driving conditions remain unchanged.</div>
 </div>
 <div class="glass r" style="left:620px;top:400px;width:480px;height:270px;padding:24px;--d:2.4s">
 <div class="lab cy" style="font-size:13px">02 · FREQUENCY</div>
 <h3 class="h" style="font-size:28px;margin:10px 0 12px">DRIVING FREQUENCY</h3>
-<div style="color:var(--m);font-size:21px">Khi đạt trạng thái ổn định, tần số dao động của hệ <b class="g">bằng tần số của lực cưỡng bức</b>.</div>
+<div style="color:var(--m);font-size:21px">In the steady state, the system’s oscillation frequency <b class="g">equals the driving-force frequency</b>.</div>
 </div>
 <div class="glass r" style="left:110px;top:700px;width:990px;height:240px;padding:20px 30px;--d:3.2s">
 <div class="lab">Equation of the Driving Force</div>
 <div class="h y" style="font-size:46px;margin:12px 0 8px">F<sub style="font-size:.55em">cb</sub>(t) = F<sub style="font-size:.55em">0</sub> cos(2πft + φ)</div>
-<div style="font-size:18px;color:var(--m);line-height:1.4">F<sub>cb</sub>(t): giá trị tức thời của lực cưỡng bức (N) · F<sub>0</sub>: biên độ lực (N) · f: tần số lực (Hz) · t: thời gian (s) · φ: pha ban đầu (rad)</div>
+<div style="font-size:18px;color:var(--m);line-height:1.4">F<sub>cb</sub>(t): instantaneous driving force (N) · F<sub>0</sub>: force amplitude (N) · f: driving frequency (Hz) · t: time (s) · φ: initial phase (rad)</div>
 <div class="lab" style="font-size:12px;margin-top:8px;text-transform:none;letter-spacing:.08em">F₀: force amplitude · f: driving frequency · φ: initial phase</div>
 </div>
 <div class="glass r" style="left:1160px;top:100px;width:700px;height:840px;--d:1.2s">
@@ -146,12 +146,12 @@ input[type=range]{position:absolute;accent-color:var(--y);cursor:pointer;height:
 <canvas id="c4a" width="880" height="440" style="top:64px"></canvas>
 <div class="glass" id="k1" style="left:560px;top:84px;width:300px;height:190px;padding:16px 18px">
 <div class="lab cy" style="font-size:13px;letter-spacing:.1em">STEADY-STATE AMPLITUDE</div>
-<div style="font-size:19px;margin-top:8px;line-height:1.35">Biên độ ổn định khi các điều kiện tác động được giữ nguyên.</div>
+<div style="font-size:19px;margin-top:8px;line-height:1.35">The amplitude remains steady when the driving conditions are unchanged.</div>
 <div class="lab y" id="k1t" style="margin-top:12px;font-size:12px;letter-spacing:.06em;line-height:1.4"></div>
 </div>
 <div class="glass" id="k2" style="left:560px;top:292px;width:300px;height:200px;padding:16px 18px">
 <div class="lab cy" style="font-size:13px;letter-spacing:.1em">DRIVING FREQUENCY</div>
-<div style="font-size:19px;margin-top:8px;line-height:1.35">Ở trạng thái ổn định, tần số dao động bằng tần số lực cưỡng bức.</div>
+<div style="font-size:19px;margin-top:8px;line-height:1.35">In the steady state, the oscillation frequency equals the driving-force frequency.</div>
 <div class="lab y" id="k2t" style="margin-top:12px;font-size:12px;letter-spacing:.06em;line-height:1.4"></div>
 </div>
 </div>
@@ -166,7 +166,7 @@ input[type=range]{position:absolute;accent-color:var(--y);cursor:pointer;height:
 <div class="lab p" style="left:40px;top:134px">Force Amplitude — F₀ (N)</div>
 <div class="big cy p" id="qv" style="left:430px;top:122px">2.4 N</div>
 <input id="qs" type="range" min="0.5" max="6" step="0.1" value="2.4" style="left:40px;top:176px;width:560px">
-<div class="p" style="left:40px;top:232px;width:600px;font-size:18px;line-height:1.4;color:var(--m)">Hệ cố định: m = 1 kg · k = 39.5 N/m · tần số riêng 1.00 Hz · có lực cản. Bạn chỉ đặt f và F₀; x, v, a, A, f<sub>ss</sub> do mô phỏng tính ra.</div>
+<div class="p" style="left:40px;top:232px;width:600px;font-size:18px;line-height:1.4;color:var(--m)">Fixed system: m = 1 kg · k = 39.5 N/m · natural frequency 1.00 Hz · damping included. Adjust f and F₀; x, v, a, A, and f<sub>ss</sub> are calculated by the simulation.</div>
 <button class="btn" id="bp" style="left:680px;top:28px">PAUSE</button>
 <button class="btn" id="br" style="left:864px;top:28px">RESET</button>
 <button class="btn" id="bf" style="left:1048px;top:28px">FORCE ON</button>
@@ -208,9 +208,9 @@ input[type=range]{position:absolute;accent-color:var(--y);cursor:pointer;height:
 <h1 class="h" style="font-size:100px;line-height:1;margin-top:16px">GALILEO <span class="g">GALILEI</span></h1>
 <div class="lab y" style="margin-top:18px">15 FEB 1564 — 8 JAN 1642 · PISA → ARCETRI, ITALY</div>
 </div>
-<div class="glass r" style="left:800px;top:430px;width:1010px;height:165px;padding:20px 30px;--d:.3s"><div class="lab cy" style="font-size:13px">01 · PENDULUM</div><div style="font-size:23px;margin-top:10px;line-height:1.4">Theo giai thoại, khoảng năm 1583 ông quan sát chiếc đèn đung đưa trong nhà thờ ở Pisa và nhận ra chu kì dao động gần như không phụ thuộc biên độ nhỏ.</div></div>
-<div class="glass r" style="left:800px;top:615px;width:1010px;height:165px;padding:20px 30px;--d:.5s"><div class="lab cy" style="font-size:13px">02 · RESONANCE</div><div style="font-size:23px;margin-top:10px;line-height:1.4">Trong <i>Discorsi</i> (1638), ông mô tả việc những cú thổi nhỏ nhưng <b class="g">đúng nhịp</b> có thể làm con lắc nặng dao động mạnh — ý tưởng gần với cộng hưởng và dao động cưỡng bức.</div></div>
-<div class="glass r" style="left:800px;top:800px;width:1010px;height:165px;padding:20px 30px;--d:.7s"><div class="lab cy" style="font-size:13px">03 · LEGACY</div><div style="font-size:23px;margin-top:10px;line-height:1.4">Đặt nền móng cho phương pháp thực nghiệm. Đẩy xích đu đúng nhịp vẫn là ví dụ quen thuộc nhất của một lực tuần hoàn duy trì dao động.</div></div>
+<div class="glass r" style="left:800px;top:430px;width:1010px;height:165px;padding:20px 30px;--d:.3s"><div class="lab cy" style="font-size:13px">01 · PENDULUM</div><div style="font-size:23px;margin-top:10px;line-height:1.4">According to a well-known anecdote, around 1583 he observed a lamp swinging in a church in Pisa and noticed that its period was nearly independent of small changes in amplitude.</div></div>
+<div class="glass r" style="left:800px;top:615px;width:1010px;height:165px;padding:20px 30px;--d:.5s"><div class="lab cy" style="font-size:13px">02 · RESONANCE</div><div style="font-size:23px;margin-top:10px;line-height:1.4">In <i>Discorsi</i> (1638), he described how small pushes applied at the <b class="g">right rhythm</b> could make a heavy pendulum swing strongly—an idea related to resonance and forced oscillation.</div></div>
+<div class="glass r" style="left:800px;top:800px;width:1010px;height:165px;padding:20px 30px;--d:.7s"><div class="lab cy" style="font-size:13px">03 · LEGACY</div><div style="font-size:23px;margin-top:10px;line-height:1.4">He helped lay the foundations of the experimental method. Pushing a swing at the right rhythm remains a familiar example of a periodic force sustaining oscillation.</div></div>
 <div class="p lab r" style="left:800px;top:992px;font-size:12px;letter-spacing:.08em;text-transform:none;--d:.9s">Portrait: Justus Sustermans, c. 1636 · Wikimedia Commons (public domain)</div>
 </section>
 
@@ -250,11 +250,11 @@ $('#s5').insertAdjacentHTML('beforeend',[['Supplies energy','Replaces the energy
 /* [tiêu đề nhỏ, tên, mô tả, UID Sketchfab (null = dùng mô phỏng trong trang), hiệu ứng, tác giả mô hình] */
 const SKF=u=>`https://sketchfab.com/models/${u}/embed?autostart=1&preload=1&transparent=1&dnt=1&autospin=0.15&ui_infos=0&ui_controls=0&ui_stop=0&ui_inspector=0&ui_watermark=0&ui_hint=0&ui_ar=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0`;
 const APP=[
-['BUS SUSPENSION','Hệ thống treo xe buýt','Lò xo và bộ giảm chấn hạn chế rung động truyền từ mặt đường lên thân xe.','27f51e93ad1348d0aab870133423489d','bob','AbejaCruz'],
-['STRUCTURAL VIBRATION','Dao động công trình','Gió hoặc bước chân là lực kích thích; gần tần số riêng, kết cấu rung mạnh.','d8c29a13eb49496a95ccb738bc1824a4','sw sway','OverWorld12'],
-['INDUSTRIAL MACHINERY','Máy móc công nghiệp','Bộ phận quay mất cân bằng tạo lực tuần hoàn gây rung; vòng cyan chỉ báo rung.','c9ee0bcd0e7a4d47827670f1edd02267','rg','Illogic'],
-['SOUND & SPEAKERS','Âm thanh và loa','Lực điện từ biến thiên làm màng loa dao động cưỡng bức theo tần số tín hiệu.','261430ce49fb43369c6e3d599f972ad9','wv','Mehdi Shahsavan · CC BY'],
-['FREQUENCY & RESONANCE','Tần số và cộng hưởng','Khi tần số kích thích f tiến gần tần số riêng f₀, biên độ tăng mạnh; lực cản giới hạn đỉnh.',null,'','In-page simulation']];
+['BUS SUSPENSION','Bus suspension system','Springs and shock absorbers reduce vibrations transmitted from the road to the vehicle body.','27f51e93ad1348d0aab870133423489d','bob','AbejaCruz'],
+['STRUCTURAL VIBRATION','Structural vibration','Wind or footsteps can provide the driving force; near the natural frequency, the structure vibrates strongly.','d8c29a13eb49496a95ccb738bc1824a4','sw sway','OverWorld12'],
+['INDUSTRIAL MACHINERY','Industrial machinery','An unbalanced rotating part produces a periodic force that causes vibration; the cyan ring indicates the vibration.','c9ee0bcd0e7a4d47827670f1edd02267','rg','Illogic'],
+['SOUND & SPEAKERS','Sound and speakers','A varying electromagnetic force drives the speaker cone at the signal frequency.','261430ce49fb43369c6e3d599f972ad9','wv','Mehdi Shahsavan · CC BY'],
+['FREQUENCY & RESONANCE','Frequency and resonance','As the driving frequency f approaches the natural frequency f₀, the amplitude increases sharply; damping limits the peak.',null,'','In-page simulation']];
 $('#s6').insertAdjacentHTML('beforeend',APP.map((a,i)=>`<div class="glass k r" style="left:${i<3?110+i*580:400+(i-3)*560}px;top:${i<3?195:615}px;width:540px;height:390px;--d:${1+i*.5}s;--f:${8+i*2}s">
 <div class="mv ${a[4].split(' ').filter(c=>c=='bob'||c=='sway').join(' ')}">${a[3]?`<iframe data-src="${SKF(a[3])}" title="${a[0]}" allow="autoplay; fullscreen; xr-spatial-tracking"></iframe>`:'<canvas id="m4" width="508" height="170"></canvas>'}<div class="fx ${a[4].split(' ').filter(c=>c=='sw'||c=='rg'||c=='wv').join(' ')}"></div></div>
 <div class="lab p y" style="left:28px;top:202px;font-size:13px">0${i+1} — ${a[0]}</div>
@@ -266,25 +266,25 @@ $('#s6').insertAdjacentHTML('beforeend',APP.map((a,i)=>`<div class="glass k r" s
 ENTER[6]=()=>$$('#s6 iframe[data-src]').forEach(f=>{f.src=f.dataset.src;f.removeAttribute('data-src')});
 
 /* ===== Thẻ chân dung: dữ liệu + dựng nội dung cho cả thẻ thứ 6 và khung slide 8 ===== */
-const BIO={n:'GALILEO GALILEI',l:'G',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Justus_Sustermans_-_Portrait_of_Galileo_Galilei%2C_1636.jpg/472px-Justus_Sustermans_-_Portrait_of_Galileo_Galilei%2C_1636.jpg'};
+const BIO={n:'GALILEO GALILEI',l:'G',img:'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Justus_Sustermans_-_Portrait_of_Galileo_Galilei%2C_1636.jpg/500px-Justus_Sustermans_-_Portrait_of_Galileo_Galilei%2C_1636.jpg'};
 const pcard=`<div class="pcb"><b>${BIO.l}</b></div><img class="pci" src="${BIO.img}" alt="${BIO.n}" onerror="this.style.display='none'"><div class="pcc"><div class="lab y" style="font-size:12px;margin-bottom:6px">SCIENTIST</div><div class="nm" style="font-size:24px">${BIO.n}</div></div>`;
 $('#x6').innerHTML=pcard;$('#pf').innerHTML=pcard;
 
 const TEAM = [
-{ n: 'ĐỖ VĂN MINH ĐỨC', i: '' },
-{ n: 'MAI ĐỨC HUY', i: '' },
+{ n: 'ĐỖ VĂN MINH ĐỨC', i: 'https://i.ibb.co/k6y7HN00/1792399486788-48335813623772711-4327988594120487324-dab1e1ae6f01f0ee2a6bf9f9625880a5.jpg' },
+{ n: 'MAI ĐỨC HUY', i: 'https://i.ibb.co/xSMqQ2sd/1792399486706-48335813623772711-4327988594120487324-b7a8588be933bfd2e6da74b38a8cd1ef.jpg' },
 { n: 'TRẦN NGUYỄN VÂN ANH', i: '' },
 { n: 'ĐẶNG LINH ĐAN', i: '' },
+{ n: 'TRẦN MINH QUANG', i: '' },
 { n: 'TRẦN THÁI HUY', i: '' },
-{ n: 'TRẦN THÁI HUY', i: '' },
-{ n: 'NGUYỄN MINH KHANG', i: '' },
+{ n: 'ĐỖ HẢI NAM', i: 'https://i.ibb.co/kgdgmqZs/1792399486808-48335813623772711-4327988594120487324-872b3456f277258fa03078ac1c50ef16.jpg' },
 { n: 'HOÀNG HỒNG HẢI', i: '' },
-{ n: 'PHAN TRÚC HIỀN', i: '' },
-{ n: 'NGUYỄN DUY KHÁNH', i: '' },
-{ n: 'NGUYỄN HỮU HUY', i: '' },
-{ n: 'NGUYỄN ĐỨC HUY', i: '' },
-{ n: 'ĐỖ QUỲNH CHI', i: '' },
-{ n: 'ĐÀO QUỲNH AN', i: '' }
+{ n: 'PHAN TRÚC HIỀN', i: 'https://i.ibb.co/rKxxXyRj/1792399486848-48335813623772711-4327988594120487324-0c4d14c7194c08ed143bb19f45b9315d.jpg' },
+{ n: 'NGUYỄN DUY KHÁNH', i: 'https://i.ibb.co/Y4b18mT4/1792399486828-48335813623772711-4327988594120487324-31c08815d08ee088781b0d1ce0c45799.jpg' },
+{ n: 'NGUYỄN HỮU HUY', i: 'https://i.ibb.co/SDx3DJn5/1792399486768-48335813623772711-4327988594120487324-8cdf6447ee187869d9821e887443cf44.jpg' },
+{ n: 'NGUYỄN ĐỨC HUY', i: 'https://i.ibb.co/nMrvkgk7/1792399486746-48335813623772711-4327988594120487324-71bd8c39f3678c6e62bbe1da9efa68e0.jpg' },
+{ n: 'ĐÀO QUỲNH AN', i: '' },
+{ n: 'ĐỖ QUỲNH CHI', i: '' }
 ];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let K8 = [];
